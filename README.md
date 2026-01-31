@@ -6,8 +6,8 @@ Python-скрипт для интеграции с [PreMiD](https://premid.app/)
 
 ## Установка и использование
 - Установите библиотеки Telethon, Mutagen и Quart
-- Зарегистрируйтесь на my.telegram.org
-- Введите api_id и api_hash в main.py (ни с кем ими не делитесь!)
+- Зарегистрируйтесь на [my.telegram.org](https://my.telegram.org)
+- Введите api_id и api_hash в `client.py` (ни с кем ими не делитесь!)
 - Установите PreMiD и поставьте в настройках Forwarding URL `http://localhost:1225/trp/premid`
 - Запустите main.py
 
