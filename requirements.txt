@@ -1,0 +1,4 @@
+Telethon>=1.42.0
+qrcode>=8.2
+mutagen>=1.47.0
+aiohttp>=3.13.3
