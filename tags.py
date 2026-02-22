@@ -12,13 +12,12 @@ with open("sample.mp3", "rb") as f:
 buf = BytesIO(data)
 buf.seek(0)
 audio = EasyMP3(buf) # аудиофайл записанный в память над которым будут производиться все мучения
-out = BytesIO() # вывод изменений
 
 def tag_change(title: str = None, artist: str = None):
     """
     Изменение тегов и вывод аудиофайла для загрузки в Telegram.
     """
-    out.truncate(0)
+    out = BytesIO() # вывод изменений
     if title:
         audio.tags['title'] = title
     if artist:
