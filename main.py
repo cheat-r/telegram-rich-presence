@@ -5,8 +5,8 @@ import asyncio
 from io import BytesIO
 from aiohttp import web, ClientSession, ClientResponseError, ClientConnectorError
 from socket import gaierror
-from client import update_status, delete_status, start_client, stop_client, delete_cache
-from tags import tag_change
+from client import Client
+from tags import Audio
 from config import config
 
 from base64 import b64decode
@@ -16,6 +16,8 @@ cache_title = cache_artist = None # так как premid отдаёт запро
 cache_image = {} # лишние запросы в сеть стараемся не делать, здесь будут сохраняться мини-превьюхи (они и так занимают мало места)
 app = web.Application()
 routes = web.RouteTableDef()
+client = Client()
+audio = Audio()
 init(autoreset=True)
 
 async def url_to_bytesio(url: str, session_http: ClientSession) -> BytesIO:
@@ -50,11 +52,11 @@ async def premid(request: web.Request):
     active_activity = data['active_activity']
 
     if not active_activity:
-        await delete_status() # удаляем статус, так как отсутствует активная активность
+        await client.delete_status() # удаляем статус, так как отсутствует активная активность
         return web.Response()
     if not 'details' in active_activity:
         print(Fore.LIGHTYELLOW_EX + 'Кажется, мы потеряли соединение с интернетом... Либо активность решила выпендриться и выкинуть пустые данные. Зараза.')
-        await delete_status()
+        await client.delete_status()
         return web.Response()
     title = f"{active_activity['details']}"
     if not 'state' in active_activity: # оказывается так тоже может быть???
@@ -99,8 +101,8 @@ async def premid(request: web.Request):
     cache_title = title
     cache_artist = artist
 
-    sample = tag_change(title, artist)
-    await update_status(sample, thumb)
+    sample = audio.tag_change(title, artist)
+    await client.update_status(sample, thumb)
 
     return web.Response()
 
@@ -110,7 +112,7 @@ async def main():
 
     пока что так, ибо если я начну сюда пихать всё остальное, я взорвусь
     """
-    await start_client()
+    await client.start_client()
     print(Fore.BLUE + 'Telegram-клиент запущен...')
 
     app.add_routes(routes)
@@ -128,11 +130,11 @@ async def main():
         try:
             print(f"{Fore.BLUE}Подчищаем за собой и отключаемся...")
             print(f"{Fore.YELLOW}(вы можете пропустить этот процесс, нажав на крестик ещё раз; учтите, что в этом случае статус вам придётся чистить вручную!)")
-            await delete_status()
-            await delete_cache()
+            await client.delete_status()
+            await client.delete_cache()
         except:
             pass
-    await stop_client()
+    await client.stop_client()
 
 if __name__ == "__main__":
     asyncio.run(main())
