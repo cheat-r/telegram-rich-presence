@@ -4,7 +4,6 @@
 Используются библиотеки [Telethon](https://docs.telethon.dev/) и [qrcode](https://github.com/lincolnloop/python-qrcode).
 """
 import logging
-from config import config
 from utils import clear
 from io import BytesIO
 from qrcode import QRCode
@@ -13,19 +12,16 @@ from telethon import TelegramClient, connection
 from telethon.errors import SessionPasswordNeededError as SPNError
 #from telethon.tl.functions.users import GetSavedMusicRequest
 from telethon.tl.functions.account import SaveMusicRequest
-from colorama import init, Fore, Back, Style
+from colorama import Fore, Back, Style
 
-class Client():
+class Client:
     "Класс для работы с аккаунтом Telegram."
-    def __init__(self):
-        init(autoreset=True) # Цвет в консоли
-
+    def __init__(self, config: dict):
         logging.basicConfig(
             format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
         )
 
         config = config['telegram']
-
         API_ID = config['api_id']
         API_HASH = config['api_hash']
 

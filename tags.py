@@ -6,7 +6,7 @@
 from io import BytesIO
 from mutagen.mp3 import EasyMP3
 
-class Audio():
+class Audio:
     "Класс для работы с аудиотегами."
     def __init__(self):
         with open("sample.mp3", "rb") as f: 

@@ -2,6 +2,8 @@
 Сборник функций для удобства вставки в код.
 """
 import platform, os
+from io import BytesIO
+from aiohttp import ClientSession
 
 def pause():
     """
@@ -24,3 +26,18 @@ def clear():
         os.system("cls")
     else:
         os.system("clear")
+
+async def url_to_bytesio(url: str) -> BytesIO:
+    """
+    Скачивание изображения со ссылки и загрузка его в BytesIO.
+    
+    Может вернуть плеяду разных ошибок, связанных с соединением, я не следил. :P
+    """
+    buf = BytesIO()
+    async with ClientSession() as sess:
+        async with sess.get(url) as resp:
+            resp.raise_for_status() # поднимает ошибку в случае если сервер вернёт код ошибки
+            async for chunk in resp.content.iter_chunked(64 * 1024):  # куски по 64KB
+                buf.write(chunk)
+    buf.seek(0)
+    return buf
