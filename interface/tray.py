@@ -2,7 +2,7 @@
 from PySide6.QtGui import QIcon, QAction, QDesktopServices, QPixmap
 from PySide6.QtWidgets import QApplication, QSystemTrayIcon, QMenu, QCheckBox, QWidgetAction
 from interface.about import AboutWindow
-from interface.settings import MainWindow
+from interface.settings import SettingsWindow
 
 class TrayMenu(QMenu):
     def __init__(self, app: QApplication):
@@ -62,7 +62,7 @@ class TrayMenu(QMenu):
     
     def config_func(self):
         if self.config_window is None:
-            self.config_window = MainWindow()
+            self.config_window = SettingsWindow()
             # При закрытии окна обнулим ссылку
             self.config_window.destroyed.connect(lambda: setattr(self, "config_window", None))
         self.config_window.show()

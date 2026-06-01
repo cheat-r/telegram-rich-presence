@@ -1,7 +1,8 @@
 'Окно "О программе".'
+import sys
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QPixmap
-from PySide6.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QPushButton, QLabel
+from PySide6.QtWidgets import QApplication, QWidget, QHBoxLayout, QVBoxLayout, QPushButton, QLabel
 
 class AboutWindow(QWidget):
     def __init__(self):
@@ -58,3 +59,11 @@ class AboutWindow(QWidget):
 
         self.close_button.clicked.connect(self.close)
         self.close_button.setDefault(True)
+
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+
+    window = AboutWindow()
+    window.show()
+
+    sys.exit(app.exec())
