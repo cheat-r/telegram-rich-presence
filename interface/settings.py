@@ -205,6 +205,7 @@ class SettingsWindow(QMainWindow):
         try:
             if os.path.exists(self.SETTINGS_FILE):
                 with open(self.SETTINGS_FILE, 'r', encoding='utf-8') as f:
+                    self.settings_data: dict
                     self.settings_data = json.load(f)
                 
                 self.apply_settings_to_widgets()
@@ -222,7 +223,7 @@ class SettingsWindow(QMainWindow):
 
         # Сервер
         server = self.settings_data["server"]
-        #self.timeout_spin.setValue(server["timeout"])
+        self.server_port_spin.setValue(server["server_port"])
 
         # Прокси
         proxy = self.settings_data["proxy"]
@@ -268,6 +269,9 @@ class SettingsWindow(QMainWindow):
     def save_settings(self):
         """Сохраняет настройки в JSON файл."""
         try:
+            if self.settings_data == self.collect_settings_from_widgets():
+                self.settings_saved = True
+                return True
             self.settings_data = self.collect_settings_from_widgets()
             with open(self.SETTINGS_FILE, 'w', encoding='utf-8') as f:
                 json.dump(self.settings_data, f, ensure_ascii=False, indent=2)
@@ -287,6 +291,8 @@ class SettingsWindow(QMainWindow):
 
     def closeEvent(self, event: QCloseEvent):
         """Обработчик закрытия окна. Если настройки не были сохранены, при закрытии окна всплывёт месседжбокс о необходимости сохраниться."""
+        if self.settings_data == self.collect_settings_from_widgets():
+            return
         if not self.settings_saved:
             reply = QMessageBox(self)
             reply.setWindowTitle("Подтверждение")
